@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<p class="tip"></p>
+<form method="post" action="/account/register">
+    <div class="form-group">
+        <label for="loginName">用户名</label>
+        <input type="text" class="form-control" id="loginName" name="loginName" placeholder="请输入用户名">
+    </div>
+    <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+    </div>
+    <div class="form-group">
+        <label for="nickName">昵称</label>
+        <input type="text" class="form-control" id="nickName" name="nickName" placeholder="请输入昵称">
+    </div>
+    <div class="form-group">
+        <label for="age">年龄</label>
+        <input type="text" class="form-control" id="age" name="age" placeholder="请输入你的年龄">
+    </div>
+    <div class="form-group">
+        <label for="location">所在地</label>
+        <input type="text" class="form-control" id="location" name="location" placeholder="请输入所在地">
+    </div>
+    <button type="submit" class="btn btn-default register_btn">注册</button>
+</form>
+<script type="text/javascript" th:src="@{/js/common/jquery-1.9.0.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".register_btn").click(function () {
+            var loginName = $("#loginName").val();
+            var password = $("#password").val();
+            if (loginName == "" || password == "") {
+                $(".tip").html("用户名和密码不能为空");
+                $(".tip").css("display", "block");
+                return;
+            } else {
+                //异步表单校验账号
+                var url = "/account/validdataLoginName";
+                var args = {loginName: loginName};
+                $.post(url, args, function (data) {
+                    if (data == "success") {
+                        //注册成功 跳转页面
+                        console.log("成功");
+                        window.location.href = "/index";
+                    } else {
+                        $(".tip").html("用户名重复,不能注册");
+                        $(".tip").css("display", "block");
+                        console.log("失败");
+                    }
+                });
+            }
+        });
+    })
+</script>
+</body>
+</html>
